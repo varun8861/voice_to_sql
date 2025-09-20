@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice-to-SQL</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        table { border-collapse: collapse; margin-top: 1em; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        pre { background-color: #eee; padding: 1em; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Voice-to-SQL Query Tool</h1>
+
+    <form method="POST" action="/process-query">
+        <label for="query">Ask a question about your data:</label>
+        <br>
+        <input type="text" id="query" name="query" size="50" required value="{{ user_query or '' }}">
+        <button type="submit">Generate SQL</button>
+    </form>
+
+    {% if generated_sql %}
+    <hr>
+    <h2>Your Question:</h2>
+    <p><em>{{ user_query }}</em></p>
+
+    <h2>Generated SQL Query:</h2>
+    <pre><code>{{ generated_sql }}</code></pre>
+
+        {% if query_results %}
+            <h2>Query Results:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        {% for header in results_headers %}
+                            <th>{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in query_results %}
+                    <tr>
+                        {% for value in row %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Query executed, but returned no results.</p>
+        {% endif %}
+    {% endif %}
+
+</body>
+</html>
